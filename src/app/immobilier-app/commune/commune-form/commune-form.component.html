@@ -1,0 +1,50 @@
+<form [formGroup]="communeForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3 row">
+        <label for="libelle" class="col-sm-4 col-form-label">Ville :</label>
+        <div class="col-sm-8">
+            <select name="" id="" class="form-control border border-secondary" formControlName="uuidVile" (blur)=logValidationErrors(communeForm)  [ngClass]="{
+                'is-invalid': submitted && communeForm.controls.uuidVile.errors
+              }">
+                <option disabled selected>Choisir ville</option>
+                <option  *ngFor="let ville of villes" value="{{ville.uuid}}"  >{{ville.libelle}}</option>
+            </select>
+            
+            <span class="help-block" *ngIf="communeForm.controls.uuidVile">
+                {{formsErrors.uuidVile}}
+            </span>
+        </div>
+
+    </div>
+    <div class="mb-3 row">
+        <label for="libelle" class="col-sm-4 col-form-label">Commune :</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control border border-secondary" formControlName="libelle" id="libelle"
+                (blur)=logValidationErrors(communeForm) [ngClass]="{
+                    'is-invalid': submitted && communeForm.controls.libelle.errors
+                  }">
+            <span class="help-block" *ngIf="communeForm.controls.libelle">
+                {{formsErrors.libelle}}
+            </span>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-8 button-group">
+            <div class="pull-right btn-group col-12 mb-2">
+                <button [disabled]="isButtonActive" type="button" class="btn btn-outline-danger col-12" (click)="onActive()" title="Modifier" >
+                    <i class="mdi mdi-pencil-box yellow" aria-hidden="true"></i> Activer
+                </button>
+                <button class="btn btn-outline-success col-12"  type="submit" [title]="
+                        communeForm.valid
+                        ? 'Enregistrez vos données'
+                        : 'Verrouillé jusqu\'à correction des erreurs'
+                    " >
+                    <i class="fa fa-save green" aria-hidden="true"></i> Sauvegarder
+                </button>
+            </div>
+            
+            
+        </div>
+    </div>
+
+</form>

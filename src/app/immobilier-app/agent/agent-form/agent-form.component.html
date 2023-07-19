@@ -1,0 +1,132 @@
+<form [formGroup]="agentForm" (ngSubmit)="onSubmit()">
+
+
+    <div class="mb-3 row">
+        <label for="nom" class="col-sm-3 col-form-label">Nom :</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control border border-secondary" formControlName="nom" id="nom" (blur)=logValidationErrors(agentForm)  [ngClass]="{
+                'is-invalid': submitted && agentForm.controls.nom.errors
+              }">
+            <span class="help-block" *ngIf="agentForm.controls.nom">
+                {{formsErrors.nom}}
+            </span>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label for="nom" class="col-sm-3 col-form-label">Prenoms :</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control border border-secondary" formControlName="prenoms" id="prenoms" (blur)=logValidationErrors(agentForm)  [ngClass]="{
+                'is-invalid': submitted && agentForm.controls.prenoms.errors
+              }">
+            <span class="help-block" *ngIf="agentForm.controls.prenoms">
+                {{formsErrors.prenoms}}
+            </span>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label for="nom" class="col-sm-3 col-form-label">Phone :</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control border border-secondary" formControlName="tel" id="tel" (blur)=logValidationErrors(agentForm)  [ngClass]="{
+                'is-invalid': submitted && agentForm.controls.tel.errors
+              }">
+            <span class="help-block" *ngIf="agentForm.controls.tel">
+                {{formsErrors.tel}}
+            </span>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label for="nom" class="col-sm-3 col-form-label">Type :</label>
+        <div class="col-sm-9">
+            <select name="" id="" class="form-control border border-secondary" formControlName="type"  (blur)=logValidationErrors(agentForm)  [ngClass]="{
+                'is-invalid': submitted && agentForm.controls.type.errors
+              }">
+                <option value="" selected disabled>Choisir</option>
+                <option  *ngFor="let type of dataType" value="{{type}}">{{type}}</option>
+            </select>
+            <span class="help-block" *ngIf="agentForm.controls.type">
+                {{formsErrors.type}}
+            </span>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label for="nom" class="col-sm-3 col-form-label">Profession :</label>
+        <div class="col-sm-9">
+            <select name="" id="" class="form-control border border-secondary" formControlName="uuidProfession"  (blur)=logValidationErrors(agentForm)  [ngClass]="{
+                'is-invalid': submitted && agentForm.controls.uuidProfession.errors
+              }">
+                <option value="" selected disabled>Choisir</option>
+                <option  *ngFor="let profession of dataProfession" value="{{profession.uuid}}">{{profession.libelle}}</option>
+            </select>
+            <span class="help-block" *ngIf="agentForm.controls.uuidProfession">
+                {{formsErrors.uuidProfession}}
+            </span>
+        </div>
+    </div>
+    <div class="mb-3 row"> 
+        <label for="nom" class="col-sm-3 col-form-label">Ville :</label>
+        <div class="col-sm-9">
+            <select name="" id="" class="form-control border border-secondary" formControlName="ville" (change)="getCommunes(agentForm.controls.ville.value)" 
+             (blur)=logValidationErrors(agentForm) [ngClass]="{
+                'is-invalid': submitted && agentForm.controls.ville.errors
+              }">
+                <!-- <option disabled selected>Choisir</option> -->
+                <option  *ngFor="let ville of dataVille" value="{{ville.libelle}}">{{ville.libelle}}</option>
+            </select>
+            <span class="help-block" *ngIf="agentForm.controls.ville">
+                {{formsErrors.ville}}
+            </span>
+        </div> 
+    </div>
+    <div class="mb-3 row">
+        <label for="nom" class="col-sm-3 col-form-label">Commune :</label>
+        <div class="col-sm-9">
+            <select name="" id="" class="form-control border border-secondary" formControlName="commune" (change)="getQuartier(agentForm.controls.commune.value)"  (blur)=logValidationErrors(agentForm) [ngClass]="{
+                'is-invalid': submitted && agentForm.controls.commune.errors
+              }">
+                <!-- <option disabled selected>Choisir</option> -->
+                <option  *ngFor="let commune of dataCommune" value="{{commune.libelle}}">{{commune.libelle}}</option>
+            </select>
+            <span class="help-block" *ngIf="agentForm.controls.commune">
+                {{formsErrors.commune}}
+            </span>
+        </div>
+    </div>
+
+    <div class="mb-3 row"> 
+        <label for="nom" class="col-sm-3 col-form-label">Quartier :</label>
+        <div class="col-sm-9">
+            <select name="" id="" class="form-control border border-secondary" formControlName="uuidQuartier"  (blur)=logValidationErrors(agentForm) [ngClass]="{
+                'is-invalid': submitted && agentForm.controls.uuidQuartier.errors
+              }">
+                <!-- <option disabled selected>Choisir</option> -->
+                <option  *ngFor="let quartier of dataQuartier" value="{{quartier.uuid}}">{{quartier.libelle}}</option>
+            </select>
+            <span class="help-block" *ngIf="agentForm.controls.uuidQuartier">
+                {{formsErrors.uuidQuartier}}
+            </span>
+        </div> 
+    </div>
+
+
+
+    <div class="mb-3 row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-9 button-group">
+            <div class="pull-right btn-group col-12 mb-2">
+                <button [disabled]="isButtonActive" type="button" class="btn btn-outline-danger col-12" (click)="onActive()" title="Modifier" >
+                    <i class="mdi mdi-pencil-box yellow" aria-hidden="true"></i> Activer
+                </button>
+                <button class="btn btn-outline-success col-12"  type="submit" [title]="
+                        agentForm.valid
+                        ? 'Enregistrez vos données'
+                        : 'Verrouillé jusqu\'à correction des erreurs'
+                    " >
+                    <i class="fa fa-save green" aria-hidden="true"> </i> Sauvegarder
+                </button>
+            </div>
+            
+            
+        </div>
+    </div>
+
+</form>

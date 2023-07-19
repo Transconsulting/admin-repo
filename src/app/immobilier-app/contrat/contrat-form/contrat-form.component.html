@@ -1,0 +1,86 @@
+
+<form [formGroup]="contratForm" (ngSubmit)="onSubmit()">
+
+
+    <!-- <div class="mb-3 row">
+        <label for="montant" class="col-sm-4 col-form-label">Montant :</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control border border-secondary" formControlName="montant" id="montant"
+                (blur)=logValidationErrors(contratForm)>
+            <span class="help-block" *ngIf="contratForm.controls.montant">
+                {{formsErrors.montant}}
+            </span>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label for="payer" class="col-sm-4 col-form-label">Payer :</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control border border-secondary" formControlName="payer" id="payer"
+                (blur)=logValidationErrors(contratForm)>
+            <span class="help-block" *ngIf="contratForm.controls.payer">
+                {{formsErrors.payer}}
+            </span>
+        </div>
+    </div> -->
+    <div class="mb-3 row">
+        <label for="reglePaiement" class="col-sm-4 col-form-label">Règle Paiement:</label>
+        <div class="col-sm-8">
+            <input type="number" class="form-control border border-secondary" formControlName="reglePaiement" id="reglePaiement"
+                (blur)=logValidationErrors(contratForm)  [ngClass]="{
+                    'is-invalid': submitted && contratForm.controls.reglePaiement.errors
+                  }">
+            <span class="help-block" *ngIf="contratForm.controls.reglePaiement">
+                {{formsErrors.reglePaiement}}
+            </span>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label for="nom" class="col-sm-4 col-form-label">Client :</label>
+      
+        <div class="col-sm-8">
+            <select name="" id="" class="form-control border border-secondary" formControlName="uuidClient"  (blur)=logValidationErrors(contratForm)  [ngClass]="{
+                'is-invalid': submitted && contratForm.controls.uuidClient.errors
+              }">
+                <option value="" selected disabled>Choisir</option>
+               <option value="" *ngFor="let client of dataClient" value="{{client.uuid}}">{{client.prenom}}-{{client.nom}}</option>
+            </select>
+            <span class="help-block" *ngIf="contratForm.controls.uuidClient">
+                {{formsErrors.uuidClient}}
+            </span>
+        </div>
+    </div>
+   
+    <div class="mb-3 row">
+        <label for="nom" class="col-sm-4 col-form-label">Type Contrat :</label>
+      
+        <div class="col-sm-8">
+            <select name="" id="" class="form-control border border-secondary" formControlName="typeContrat"  (blur)=logValidationErrors(contratForm)  [ngClass]="{
+                'is-invalid': submitted && contratForm.controls.typeContrat.errors
+              }">
+                <!-- <option value="" selected disabled>Choisir</option> -->
+               <option value="" *ngFor="let contrat of dataTypeContrat" value="{{contrat}}">{{contrat}}</option>
+            </select>
+            <span class="help-block" *ngIf="contratForm.controls.contrat">
+                {{formsErrors.contrat}}
+            </span>
+        </div>
+    </div>
+    
+    <div class="mb-3 row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-8 button-group">
+            <div class="pull-right btn-group col-12 mb-2">
+                <button [disabled]="isButtonActive" type="button" class="btn btn-outline-danger col-12" (click)="onActive()" title="Modifier" >
+                    <i class="mdi mdi-pencil-box yellow" aria-hidden="true"></i> Activer
+                </button>
+                <button class="btn btn-outline-success col-12"  type="submit" [title]="
+                contratForm.valid
+                        ? 'Enregistrez vos données'
+                        : 'Verrouillé jusqu\'à correction des erreurs'
+                    " >
+                    <i class="fa fa-save green" aria-hidden="true"></i> Sauvegarder
+                </button>
+            </div>   
+        </div>
+    </div>
+</form>

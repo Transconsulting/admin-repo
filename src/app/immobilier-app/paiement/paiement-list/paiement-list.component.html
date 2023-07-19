@@ -1,0 +1,132 @@
+<div class="card">
+    <div class="card-header d-flex">Liste Detail Contrat
+        <button type="button"  class="btn btn-danger ms-auto border border-secondary" (click)="onDisplay()"><i class="fas fa-plus"></i></button>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped border mt-4">
+            <thead>
+                <tr>
+                    <th >ID</th>
+                    <th sortable="Name" >Reference</th>
+                    <!-- <th sortable="Name" >Date fin</th> -->
+                     <th sortable="Name" >Date</th>
+                     <th sortable="Name" >Montant</th>
+                   <!-- <th sortable="Name" >datePaiement</th>
+                   <th sortable="Name" >Agence</th> -->
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let paiement of cfilterPaiement | slice: (cpage-1) * cpageSize : (cpage-1) * cpageSize + cpageSize  let i=index">
+                    <td>{{ i+1 }}</td>
+                    <!-- <td>
+                        <img [src]='uuidproprietaire.imagePath'class="me-2 rounded-circle" style="width: 30px">
+                        <ngb-highlight [result]="uuidproprietaire.Name" [term]="csearchTerm"></ngb-highlight>
+                    </td> -->
+                    <td>
+                        <ngb-highlight [result]="paiement.reference" [term]="csearchTerm"></ngb-highlight><br>
+                        <ngb-highlight [result]="paiement.datePaiement" [term]="csearchTerm"></ngb-highlight>
+                    </td>
+                   
+                    <td>
+                        <ngb-highlight [result]="paiement.montant" [term]="csearchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                        <ngb-highlight [result]="paiement.numeroParcelApp" [term]="csearchTerm"></ngb-highlight>
+                    </td>
+                    
+                    <td>
+                        <button type="button" class="btn btn-secondary btn-xs" (click)="initialisation(paiement)"><i class="fas fa-eye"></i></button>
+                        <i-feather name="trash-2" class="feather-sm text-danger pointer" (click)="delete(paiement.uuid)"></i-feather> 
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    
+        <div class="d-flex justify-content-between p-2">    
+            <ngb-pagination [(page)]="cpage"
+            [pageSize]="cpageSize"
+            [collectionSize]="totalLengthOfCollection"></ngb-pagination>
+            <select class="form-select" style="width: auto" [(ngModel)]="cpageSize">
+            <option [ngValue]="2">2 items per page</option>
+            <option [ngValue]="4">4 items per page</option>
+            <option [ngValue]="6">6 items per page</option>
+          </select>
+        </div>
+    </div>
+</div>
+<div class="card" [hidden]="!isDisplay">
+    <div class="card-header">Enregistrement Details Contrats</div>
+    <div class="card-body">
+        <form [formGroup]="paiementForm" (ngSubmit)="onSubmit()">
+              
+            <div class="mb-3 row">
+                <label for="nom" class="col-sm-2 col-form-label">Reference :</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control border border-secondary" formControlName="reference" id="reference" placeholder="reference"
+                        (blur)=logValidationErrors(paiementForm)>
+                    <span class="help-block" *ngIf="paiementForm.controls.reference">
+                        {{formsErrors.reference}}
+                    </span>
+                </div>
+            </div>
+        
+            <div class="mb-3 row">
+                <label for="nom" class="col-sm-2 col-form-label">Montant :</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control border border-secondary" formControlName="montant" id="montant" placeholder="montant"
+                        (blur)=logValidationErrors(paiementForm)>
+                    <span class="help-block" *ngIf="paiementForm.controls.montant">
+                        {{formsErrors.montant}}
+                    </span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="nom" class="col-sm-2 col-form-label">Mode Paiement :</label>
+                <div class="col-sm-10">
+                    <select name="" id="" class="form-control border border-secondary" formControlName="uuidModePaiement" (blur)=logValidationErrors(paiementForm)>
+                        <option value="" selected disabled>Choisir</option>
+                    <option value="" *ngFor="let mode of modePaiementData" value="{{mode.uuid}}">{{mode.libelle}}</option>
+                    </select>
+                    <span class="help-block" *ngIf="paiementForm.controls.uuidModePaiement">
+                        {{formsErrors.uuidModePaiement}}
+                    </span>
+                </div>
+            </div>
+   
+            <div class="mb-3 row">
+                <label for="nom" class="col-sm-2 col-form-label">Date :</label>
+                <div class="col-sm-10">
+                    <input type="date" class="form-control border border-secondary" formControlName="datePaiement" id="datePaiement" placeholder="datePaiement"
+                        (blur)=logValidationErrors(paiementForm)>
+                    <span class="help-block" *ngIf="paiementForm.controls.datePaiement">
+                        {{formsErrors.datePaiement}}
+                    </span>
+                </div>
+            </div>
+
+        
+            <div class="mb-3 row">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-10 button-group">
+                    <div class="pull-right btn-group col-12 mb-2">
+                        <button  [disabled]="isButtonActive" type="button" class="btn btn-outline-danger col-12" (click)="onActive()" title="Modifier" >
+                            <i class="mdi mdi-pencil-box yellow" aria-hidden="true"></i>
+                        </button>
+                        <button class="btn btn-outline-success col-12"  type="submit" [title]="
+                        paiementForm.valid
+                                ? 'Enregistrez vos données'
+                                : 'Verrouillé jusqu\'à correction des erreurs'
+                            " >
+                            <i class="fa fa-save green" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>       
+        </form>
+    </div>
+</div>
+
+
+   
+   

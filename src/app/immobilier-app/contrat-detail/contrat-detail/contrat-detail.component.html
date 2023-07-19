@@ -1,0 +1,208 @@
+<div class="card">
+    <div class="card-header d-flex">Liste Detail Contrat
+        <button type="button"  class="btn btn-danger ms-auto" (click)="onDisplay()"><i class="fas fa-plus"></i></button>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped border mt-4">
+            <thead>
+                <tr>
+                    <th >ID</th>
+                    <th sortable="Name" >Durée contrat</th>
+                    <!-- <th sortable="Name" >Date fin</th> -->
+                     <th sortable="Name" >Prix Loyer</th>
+                     <th sortable="Name" >Avance</th>
+                   <!-- <th sortable="Name" >Caution</th>
+                   <th sortable="Name" >Agence</th> -->
+                   <th sortable="Name" >Habitation</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let contratDetail of cfilterContratDetail | slice: (cpage-1) * cpageSize : (cpage-1) * cpageSize + cpageSize  let i=index">
+                    <td>{{ i+1 }}</td>
+                    <!-- <td>
+                        <img [src]='uuidproprietaire.imagePath'class="me-2 rounded-circle" style="width: 30px">
+                        <ngb-highlight [result]="uuidproprietaire.Name" [term]="csearchTerm"></ngb-highlight>
+                    </td> -->
+                    <td>
+                        <ngb-highlight [result]="contratDetail.debut" [term]="csearchTerm"></ngb-highlight><br>
+                        <ngb-highlight [result]="contratDetail.fin" [term]="csearchTerm"></ngb-highlight>
+                    </td>
+                   
+                    <td>
+                        <ngb-highlight [result]="contratDetail.prixLoyer" [term]="csearchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                        <ngb-highlight [result]="contratDetail.avance" [term]="csearchTerm"></ngb-highlight>
+                    </td>
+                    <!-- <td>
+                        <ngb-highlight [result]="contratDetail.caution" [term]="csearchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                        <ngb-highlight [result]="contratDetail.agence" [term]="csearchTerm"></ngb-highlight>
+                    </td> -->
+                    <td>
+                        <ngb-highlight [result]="contratDetail.numeroParcelApp" [term]="csearchTerm"></ngb-highlight>
+                    </td>
+                    
+                    <td>
+                        <button type="button" class="btn btn-secondary btn-xs" (click)="initialisation(contratDetail)"><i class="fas fa-eye"></i></button>
+                        <i-feather name="trash-2" class="feather-sm text-danger pointer" (click)="delete(contratDetail.uuid)"></i-feather> 
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    
+        <div class="d-flex justify-content-between p-2">    
+            <ngb-pagination [(page)]="cpage"
+            [pageSize]="cpageSize"
+            [collectionSize]="totalLengthOfCollection"></ngb-pagination>
+            <select class="form-select" style="width: auto" [(ngModel)]="cpageSize">
+            <option [ngValue]="2">2 items per page</option>
+            <option [ngValue]="4">4 items per page</option>
+            <option [ngValue]="6">6 items per page</option>
+          </select>
+        </div>
+    </div>
+</div>
+<div class="card" [hidden]="!isDisplay">
+    <div class="card-header">Enregistrement Details Contrats</div>
+    <div class="card-body">
+        <form [formGroup]="contratDetailForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3 row">
+                <label for="nom" class="col-sm-2 col-form-label">Proprietaire:</label>
+              
+                <div class="col-sm-10">
+                    
+                    <select name="" id="" class="form-control border border-secondary" formControlName="uuidproprietaire" (change)="getDomaineByStatutAndProprietaire(contratDetailForm.controls.uuidproprietaire.value)" (blur)=logValidationErrors(contratDetailForm)>
+                        <option value="" selected disabled>Choisir</option>
+                       <option value="" *ngFor="let proprietaire of dataProprietaire" value="{{proprietaire.uuid}}">{{proprietaire.nom}}&nbsp;{{proprietaire.prenoms}}</option>
+                    </select>
+                    <span class="help-block" *ngIf="contratDetailForm.controls.uuidproprietaire">
+                        {{formsErrors.uuidproprietaire}}
+                    </span>
+                </div>
+            </div>
+                 <div class="mb-3 row">
+                <label for="nom" class="col-sm-2 col-form-label">Domaine :</label>
+              
+                <div class="col-sm-10">
+                    <select name="" id="" class="form-control border border-secondary" formControlName="domaine" (change)="getHabitationByStatut(contratDetailForm.controls.domaine.value)"  (blur)=logValidationErrors(contratDetailForm)>
+                        <option value="" selected disabled>Choisir</option>
+                       <option value="" *ngFor="let domaine of dataStatut" value="{{domaine.libelle}}">{{domaine.libelle}}</option>
+                    </select>
+                    <span class="help-block" *ngIf="contratDetailForm.controls.domaine">
+                        {{formsErrors.domaine}}
+                    </span>
+                </div>
+            </div> 
+
+            <div class="mb-3 row">
+                <label for="nom" class="col-sm-2 col-form-label">Habitation:</label>
+              
+                <div class="col-sm-10">
+                    <select name="" id="" class="form-control border border-secondary" formControlName="uuidParcelApp" (change)="displayInfoHabitation(contratDetailForm.controls.uuidParcelApp.value)"  (blur)=logValidationErrors(contratDetailForm)>
+                        <option  selected disabled>Choisir</option>
+                       <option *ngFor="let habitation of dataHabitationDomaine" value="{{habitation.uuid}}">{{habitation.numero}}</option>
+                    </select>
+                    <span class="help-block" *ngIf="contratDetailForm.controls.uuidParcelApp">
+                        {{formsErrors.uuidParcelApp}}
+                    </span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="nom" class="col-sm-2 col-form-label">Période:</label>
+            <div class="col-sm-5">
+                <input type="date" class="form-control border border-secondary" formControlName="debut" id="debut"
+                    (blur)=logValidationErrors(contratDetailForm) >
+                <span class="help-block" *ngIf="contratDetailForm.controls.debut">
+                    {{formsErrors.debut}}
+                </span>
+            </div>
+            <div class="col-sm-5">
+                <input type="date" class="form-control border border-secondary" formControlName="fin" id="fin"
+                    (blur)=logValidationErrors(contratDetailForm) >
+                <span class="help-block" *ngIf="contratDetailForm.controls.fin">
+                    {{formsErrors.fin}}
+                </span>
+            </div>
+        </div>
+
+        <div class="mb-3 row" *ngIf="!isHidden">
+            <label for="nom" class="col-sm-2 col-form-label">Avance :</label>
+            <div class="col-sm-5">
+                <input type="number"  class="form-control border border-secondary" formControlName="avance" id="avance" placeholder="avance"
+                    (blur)=logValidationErrors(contratDetailForm)>
+                <span class="help-block" *ngIf="contratDetailForm.controls.avance">
+                    {{formsErrors.avance}}
+                </span>
+            </div>
+             <div class="col-sm-5">
+                <input type="text" class="form-control border border-secondary" formControlName="avance_string" id="avance" placeholder="avance"
+                    (blur)=logValidationErrors(contratDetailForm)>
+                <span class="help-block" *ngIf="contratDetailForm.controls.avance_string">
+                    {{formsErrors.avance_string}}
+                </span>
+            </div>
+        </div>
+        
+        <!-- <div class="mb-3 row">
+            <label for="nom" class="col-sm-2 col-form-label">Avance :</label>
+           
+        </div> -->
+
+        <div class="mb-3 row">
+            <label for="nom" class="col-sm-2 col-form-label">Prix :</label>
+            <div class="col-sm-10">
+                <input type="number" class="form-control border border-secondary" formControlName="prixLoyer" id="prixLoyer" placeholder="prixLoyer"
+                    (blur)=logValidationErrors(contratDetailForm)>
+                <span class="help-block" *ngIf="contratDetailForm.controls.prixLoyer">
+                    {{formsErrors.prixLoyer}}
+                </span>
+            </div>
+        </div>
+        <div class="mb-3 row" *ngIf="!isHidden">
+            <label for="nom" class="col-sm-2 col-form-label">Caution :</label>
+            <div class="col-sm-10">
+                <input type="number"  class="form-control border border-secondary" formControlName="caution" id="caution" placeholder="caution"
+                    (blur)=logValidationErrors(contratDetailForm)>
+                <span class="help-block" *ngIf="contratDetailForm.controls.caution">
+                    {{formsErrors.caution}}
+                </span>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label for="nom" class="col-sm-3 col-form-label">Frais agence :</label>
+            <div class="col-sm-9">
+                <input type="number" class="form-control border border-secondary" formControlName="agence" id="agence" placeholder="agence"
+                    (blur)=logValidationErrors(contratDetailForm)>
+                <span class="help-block" *ngIf="contratDetailForm.controls.agence">
+                    {{formsErrors.agence}}
+                </span>
+            </div>
+        </div>
+            <div class="mb-3 row">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-10 button-group">
+                    <div class="pull-right btn-group col-12 mb-2">
+                        <button  [disabled]="isButtonActive" type="button" class="btn btn-outline-danger col-12" (click)="onActive()" title="Modifier" >
+                            <i class="mdi mdi-pencil-box yellow" aria-hidden="true"></i> Activer
+                        </button>
+                        <button class="btn btn-outline-success col-12"  type="submit" [title]="
+                        contratDetailForm.valid
+                                ? 'Enregistrez vos données'
+                                : 'Verrouillé jusqu\'à correction des erreurs'
+                            " >
+                            <i class="fa fa-save green" aria-hidden="true"></i> Sauvegarder
+                        </button>
+                    </div>
+                </div>
+            </div>       
+        </form>
+    </div>
+</div>
+
+
+   
+   

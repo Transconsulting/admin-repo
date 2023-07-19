@@ -1,0 +1,82 @@
+<div class="card">
+    <div class="card-header bg-secondary text-dark">Gestion Clients</div>
+    <div class="card-body">
+        <div class="d-flex mt-3">
+            <input type="text" placeholder="Search" class="form-control w-auto border border-secondary" [(ngModel)]="csearchTerm" />
+            <button type="button"  class="btn btn-secondary ms-auto" (click)="openModal(editModal, null)">+ Ajouter</button>
+        </div>
+        <table class="table table-striped border mt-4">
+            <thead>
+                <tr>
+                    <th >ID</th>
+                    <th sortable="Name" >Nom</th>
+                    <th sortable="Name" >Prenom</th>
+                    <th sortable="Name" >Telephone</th>
+                    <th sortable="Name" >Etat Civil</th>
+                    <th sortable="Name" >Nombre Enfant</th>
+                   
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let client of cfilterClient  | slice: (cpage-1) * cpageSize : (cpage-1) * cpageSize + cpageSize  let i=index">
+                    <td>{{ i+1 }}</td>
+                    <!-- <td>
+                        <img [src]='agent.imagePath'class="me-2 rounded-circle" style="width: 30px">
+                        <ngb-highlight [result]="agent.Name" [term]="csearchTerm"></ngb-highlight>
+                    </td> -->
+                    <td>
+                        <ngb-highlight [result]="client.nom" [term]="csearchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                        <ngb-highlight [result]="client.prenom" [term]="csearchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                        <ngb-highlight [result]="client.telephone" [term]="csearchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                        <ngb-highlight [result]="client.etatCivil" [term]="csearchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                        <ngb-highlight [result]="client.nombreEnfant" [term]="csearchTerm"></ngb-highlight>
+                    </td>
+                
+                    
+                    <td>
+                       <i-feather name="edit-3" class="feather-sm text-info me-2 pointer"  (click)="openModal(editModal, client)"></i-feather>
+                        <i-feather name="trash-2" class="feather-sm text-danger pointer" (click)="delete(client.uuid)"></i-feather> 
+                    </td>
+    
+    
+                </tr>
+            </tbody>
+        </table>
+    
+        <div class="d-flex justify-content-between p-2">    
+            <ngb-pagination [(page)]="cpage"
+            [pageSize]="cpageSize"
+            [collectionSize]="totalLengthOfCollection"></ngb-pagination>
+            <select class="form-select" style="width: auto" [(ngModel)]="cpageSize">
+            <option [ngValue]="2">2 items per page</option>
+            <option [ngValue]="4">4 items per page</option>
+            <option [ngValue]="6">6 items per page</option>
+          </select>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #editModal let-modal>
+
+    <div class="modal-header bg-secondary text-white">
+        <h5 class="modal-title" id="editLabel">{{editAddLabel}} client</h5>
+        <button type="button" class="btn-close bg-danger" (click)="closeBtnClick()" aria-label="Close">
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <app-client-form [childProperty]="parentProperty"></app-client-form>
+       
+    </div>
+</ng-template>
+

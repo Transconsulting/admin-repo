@@ -1,0 +1,80 @@
+<div class="card-group mb-4">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-6">
+                    <h3 class="mb-0 mt-2">
+                        <i class="icon-user text-danger"></i>
+                    </h3>
+                </div>
+                <div class="col-6">
+                    <h1 class="text-end text-danger mt-2">{{clientTotal}}</h1>
+                </div>
+                <div class="col-12">
+                    <h6 class="card-subtitle">Clients</h6>
+                    <ngb-progressbar [showValue]="false" type="danger" [value]="50"></ngb-progressbar>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Column -->
+    <!-- Column -->
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-6">
+                    <h3 class="mb-0 mt-2">
+                        <i class="icon-user text-megna"></i>
+                    </h3>
+                </div>
+                <div class="col-6">
+                    <h1 class="text-end text-megna mt-2">{{agentTotal}}</h1>
+                </div>
+                <div class="col-12">
+                    <h6 class="card-subtitle">Agents</h6>
+                    <ngb-progressbar [showValue]="false" type="megna" [value]="50"></ngb-progressbar>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Column -->
+    <!-- Column -->
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-6">
+                    <h3 class="mb-0 mt-2">
+                        <i class="icon-home text-primary"></i>
+                    </h3>
+                </div>
+                <div class="col-6">
+                    <h1 class="text-end text-primary mt-2">15</h1>
+                </div>
+                <div class="col-12">
+                    <h6 class="card-subtitle">Habitations</h6>
+                    <ngb-progressbar [showValue]="false" type="primary" [value]="50"></ngb-progressbar>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Column -->
+    <!-- Column -->
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-6">
+                    <h3 class="mb-0 mt-2">
+                        <i class="icon-user text-success"></i>
+                    </h3>
+                </div>
+                <div class="col-6">
+                    <h1 class="text-end text-success mt-2">{{proprietaireTotal}}</h1>
+                </div>
+                <div class="col-12">
+                    <h6 class="card-subtitle">Propriètaires</h6>
+                    <ngb-progressbar [showValue]="false" type="success" [value]="50"></ngb-progressbar>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

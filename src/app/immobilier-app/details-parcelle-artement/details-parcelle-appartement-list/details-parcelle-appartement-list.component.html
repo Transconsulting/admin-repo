@@ -1,0 +1,124 @@
+
+
+<div class="card">
+    <div class="card-header d-flex">Liste Detail Habitation
+        <button type="button"  class="btn btn-danger ms-auto" (click)="onDisplay()"><i class="fas fa-plus"></i></button>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped border mt-4">
+            <thead>
+                <tr>
+                    <th >ID</th>
+                    <th sortable="Name" >Libelle</th>
+                     <th sortable="Name" >Size</th>
+                     <th sortable="Name" >Surface</th>
+                 <th sortable="Name" >N° Habitation</th> 
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let habitationDetail of cfilterHabitationDetail | slice: (cpage-1) * cpageSize : (cpage-1) * cpageSize + cpageSize  let i=index">
+                    <td>{{ i+1 }}</td>
+                    <!-- <td>
+                        <img [src]='proprietaire.imagePath'class="me-2 rounded-circle" style="width: 30px">
+                        <ngb-highlight [result]="proprietaire.Name" [term]="csearchTerm"></ngb-highlight>
+                    </td> -->
+                    <td>
+                        <ngb-highlight [result]="habitationDetail.libelle" [term]="csearchTerm"></ngb-highlight>
+                    </td>
+                   
+                     <td>
+                        <ngb-highlight [result]="habitationDetail.size" [term]="csearchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                        <ngb-highlight [result]="habitationDetail.surface" [term]="csearchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                        <ngb-highlight [result]="habitationDetail.numeroParcelleAppartement" [term]="csearchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-secondary btn-xs" (click)="initialisation(habitationDetail)"><i class="fas fa-eye"></i></button>
+                        <i-feather name="trash-2" class="feather-sm text-danger pointer" (click)="delete(habitationDetail.uuid)"></i-feather> 
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    
+        <div class="d-flex justify-content-between p-2">    
+            <ngb-pagination [(page)]="cpage"
+            [pageSize]="cpageSize"
+            [collectionSize]="totalLengthOfCollection"></ngb-pagination>
+            <select class="form-select" style="width: auto" [(ngModel)]="cpageSize">
+            <option [ngValue]="2">2 items per page</option>
+            <option [ngValue]="4">4 items per page</option>
+            <option [ngValue]="6">6 items per page</option>
+          </select>
+        </div>
+    </div>
+</div>
+
+
+
+    <div class="card" [hidden]="!isDisplay">
+        <div class="card-header">Enregistrement</div>
+        <div class="card-body">
+            <form [formGroup]="habitationDetailForm" (ngSubmit)="onSubmit()">
+    
+                <div class="mb-3 row">
+                    <label for="nom" class="col-sm-2 col-form-label">libelle :</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control border border-secondary col-12" formControlName="libelle" id="libelle"
+                            (blur)=logValidationErrors(habitationDetailForm) placeholder="libelle"   [ngClass]="{
+                                'is-invalid': submitted && habitationDetailForm.controls.libelle.errors
+                            }">
+                        <span class="help-block" *ngIf="habitationDetailForm.controls.libelle">
+                            {{formsErrors.libelle}}
+                        </span>
+                    </div>
+                </div>
+               
+            <div class="mb-3 row">
+                <label for="nom" class="col-sm-2 col-form-label">Nombre :</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control border border-secondary" formControlName="size" id="size" placeholder="nombre"
+                        (blur)=logValidationErrors(habitationDetailForm)  [ngClass]="{
+                            'is-invalid': submitted && habitationDetailForm.controls.size.errors
+                          }">
+                    <span class="help-block" *ngIf="habitationDetailForm.controls.size">
+                        {{formsErrors.size}}
+                    </span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="nom" class="col-sm-2 col-form-label">Surface :</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control border border-secondary" formControlName="surface" id="surface" placeholder="surface"
+                        (blur)=logValidationErrors(habitationDetailForm) [ngClass]="{
+                            'is-invalid': submitted && habitationDetailForm.controls.surface.errors
+                          }">
+                    <span class="help-block" *ngIf="habitationDetailForm.controls.surface">
+                        {{formsErrors.surface}}
+                    </span>
+                </div>
+            </div>
+                <div class="mb-3 row">
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-10 button-group">
+                        <div class="pull-right btn-group col-12 mb-2">
+                            <button  [disabled]="isButtonActive" type="button" class="btn btn-outline-danger col-12" (click)="onActive()" title="Modifier" >
+                                <i class="mdi mdi-pencil-box yellow" aria-hidden="true"></i> Activer
+                            </button>
+                            <button class="btn btn-outline-success col-12"  type="submit" [title]="
+                            habitationDetailForm.valid
+                                    ? 'Enregistrez vos données'
+                                    : 'Verrouillé jusqu\'à correction des erreurs'
+                                " >
+                                <i class="fa fa-save green" aria-hidden="true"></i> Sauvegarder
+                            </button>
+                        </div>
+                    </div>
+                </div>       
+            </form>
+        </div>
+    </div>
+    

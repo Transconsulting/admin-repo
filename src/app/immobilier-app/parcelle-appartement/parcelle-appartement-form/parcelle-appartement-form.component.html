@@ -1,0 +1,154 @@
+
+<form [formGroup]="habitationForm" (ngSubmit)="onSubmit()">
+
+
+    <div class="mb-3 row">
+        <label for="nom" class="col-sm-4 col-form-label">Proprietaire :</label>
+      
+        <div class="col-sm-8">
+            <select name="" id="" class="form-control border border-secondary" formControlName="uuidProprietaire" (change)="getDomaines(habitationForm.controls.uuidProprietaire.value)" (blur)=logValidationErrors(habitationForm)  [ngClass]="{
+                'is-invalid': submitted && habitationForm.controls.uuidProprietaire.errors
+              }">
+                <option value="" selected disabled>Choisir</option>
+               <option value="" *ngFor="let proprietaire of dataProprietaire" value="{{proprietaire.uuid}}">{{proprietaire.nom}}-{{proprietaire.prenoms}}</option>
+            </select>
+            <span class="help-block" *ngIf="habitationForm.controls.uuidProprietaire">
+                {{formsErrors.uuidProprietaire}}
+            </span>
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <label for="nom" class="col-sm-4 col-form-label">Domaine :</label>
+      
+        <div class="col-sm-8">
+            <select name="" id="" class="form-control border border-secondary" formControlName="uuidDomaine" (change)="onDisplayInput(habitationForm.controls.uuidDomaine.value)"  (blur)=logValidationErrors(habitationForm)
+            [ngClass]="{
+                'is-invalid': submitted && habitationForm.controls.uuidDomaine.errors
+              }">
+                <option value="" selected disabled>Choisir</option>
+               <option value="" *ngFor="let domaine of dataDomaine" value="{{domaine.uuid}}">{{domaine.libelle}}</option>
+            </select>
+            <span class="help-block" *ngIf="habitationForm.controls.uuidDomaine">
+                {{formsErrors.uuidDomaine}}
+            </span>
+        </div>
+    </div>
+    
+    <div class="mb-3 row">
+        <label for="nom" class="col-sm-4 col-form-label">Numéro :</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control border border-secondary" formControlName="numero" id="numero"
+                (blur)=logValidationErrors(habitationForm) [ngClass]="{
+                    'is-invalid': submitted && habitationForm.controls.numero.errors
+                  }">
+            <span class="help-block" *ngIf="habitationForm.controls.numero">
+                {{formsErrors.numero}}
+            </span>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label for="nom" class="col-sm-4 col-form-label">Prix :</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control border border-secondary" formControlName="prix" id="prix"
+                (blur)=logValidationErrors(habitationForm) [ngClass]="{
+                    'is-invalid': submitted && habitationForm.controls.prix.errors
+                  }">
+            <span class="help-block" *ngIf="habitationForm.controls.prix">
+                {{formsErrors.prix}}
+            </span>
+        </div>
+    </div>
+
+    
+    <div class="mb-3 row">
+        <label for="nom" class="col-sm-4 col-form-label">statut :</label>
+        <div class="col-sm-8">
+            <select name="" id="" class="form-control border border-secondary" formControlName="statutDomaine"  (blur)=logValidationErrors(habitationForm)
+            [ngClass]="{
+                'is-invalid': submitted && habitationForm.controls.statutDomaine.errors
+              }">
+               <!-- <option value="" selected disabled>Choisir</option> -->
+               <option  *ngFor="let statutDomaine of dataStatut" value="{{statutDomaine}}">{{statutDomaine}}</option>
+            </select>
+            <span class="help-block" *ngIf="habitationForm.controls.statutDomaine">
+                {{formsErrors.statutDomaine}}
+            </span>
+        </div>
+    </div>
+    <div class="mb-3 row" *ngIf="!isHidden">
+        <label for="nom" class="col-sm-4 col-form-label">Avance :</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control border border-secondary" formControlName="avance" id="avance"
+            >
+           
+        </div>
+    </div>
+    <div class="mb-3 row" *ngIf="!isHidden">
+        <label for="nom" class="col-sm-4 col-form-label">Caution :</label>
+        <div class="col-sm-8">
+            <input type="number" class="form-control border border-secondary" formControlName="caution" id="caution"
+           >
+
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label for="nom" class="col-sm-4 col-form-label">Frais agence :</label>
+        <div class="col-sm-8">
+            <input type="number" class="form-control border border-secondary" formControlName="fraisAgence" id="fraisAgence"
+            (blur)=logValidationErrors(habitationForm) [ngClass]="{
+                'is-invalid': submitted && habitationForm.controls.fraisAgence.errors
+              }">
+            <span class="help-block" *ngIf="habitationForm.controls.fraisAgence">
+                {{formsErrors.caution}}
+            </span>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label for="nom" class="col-sm-4 col-form-label">Vidéo :</label>
+        <div class="col-sm-8">
+            <input type="file" id="file" (change)="uploadFile($event)" accept=".*" ngf-max-size="10MB" class="form-control border border-secondary">
+           
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label for="nom" class="col-sm-4 col-form-label">Description :</label>
+        <div class="col-sm-8">
+            <textarea cols="1" rows="4" class="form-control border border-secondary" formControlName="description" id="description"></textarea>
+            
+        </div>
+    </div>
+    <!-- <div class="mb-3 row">
+        <label for="nom" class="col-sm-4 col-form-label">Ville :</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control border border-secondary" formControlName="dateNaiss" id="profession"
+                (blur)=logValidationErrors(proprietaireForm)>
+            <span class="help-block" *ngIf="proprietaireForm.controls.profession">
+                {{formsErrors.profession}}
+            </span>
+        </div>
+    </div> -->
+
+
+    <div class="mb-3 row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-8 button-group">
+            <div class="pull-right btn-group col-12 mb-2">
+                <button [disabled]="isButtonActive" type="button" class="btn btn-outline-danger col-12" (click)="onActive()" title="Modifier" >
+                    <i class="mdi mdi-pencil-box yellow" aria-hidden="true"></i> Activer
+                </button>
+                <button class="btn btn-outline-success col-12"  type="submit" [title]="
+                habitationForm.valid
+                        ? 'Enregistrez vos données'
+                        : 'Verrouillé jusqu\'à correction des erreurs'
+                    " >
+                    <i class="fa fa-save green" aria-hidden="true"></i> Sauvegarder
+                </button>
+            </div>
+            
+            
+        </div>
+    </div>
+    
+
+</form>

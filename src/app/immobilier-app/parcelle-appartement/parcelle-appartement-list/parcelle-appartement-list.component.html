@@ -1,0 +1,99 @@
+<div class="card">
+    <div class="card-header bg-secondary text-dark">Gestion Habitation</div>
+    <div class="card-body">
+        <div class="d-flex mt-3">
+            <input type="text" placeholder="Search" class="form-control w-auto border border-secondary" [(ngModel)]="csearchTerm" />
+            <button type="button"  class="btn btn-secondary ms-auto" (click)="openModal(editModal, null)">+ Ajouter</button>
+        </div>
+        <table class="table table-striped border mt-4">
+            <thead>
+                <tr>
+                    <th >ID</th>
+                    <th sortable="Name" >Numéro</th>
+                     <th sortable="Name" >Domaine</th>
+                     <th sortable="Name" >Prix</th>
+                   <th sortable="Name" >Statut</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let habitation of cfilterhabitation | slice: (cpage-1) * cpageSize : (cpage-1) * cpageSize + cpageSize  let i=index">
+                    <td>{{ i+1 }}</td>
+                    <!-- <td>
+                        <img [src]='proprietaire.imagePath'class="me-2 rounded-circle" style="width: 30px">
+                        <ngb-highlight [result]="proprietaire.Name" [term]="csearchTerm"></ngb-highlight>
+                    </td> -->
+                    <td>
+                        <ngb-highlight [result]="habitation.numero" [term]="csearchTerm"></ngb-highlight>
+                    </td>
+                   
+                     <td>
+                        <ngb-highlight [result]="habitation.domaine" [term]="csearchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                        <ngb-highlight [result]="habitation.prix" [term]="csearchTerm"></ngb-highlight>
+                    </td>
+                   
+                   <td>
+                        <ngb-highlight [result]="habitation.statutDomaine" [term]="csearchTerm"></ngb-highlight>
+                    </td>
+                    
+                    <td>
+                       <i-feather name="edit-3" class="feather-sm text-info me-2 pointer"  (click)="openModal(editModal, habitation)"></i-feather>
+                        <i-feather name="trash-2" class="feather-sm text-danger pointer" (click)="delete(habitation.uuid)"></i-feather> 
+                    </td>
+    
+    
+                </tr>
+            </tbody>
+        </table>
+    
+        <div class="d-flex justify-content-between p-2">    
+            <ngb-pagination [(page)]="cpage"
+            [pageSize]="cpageSize"
+            [collectionSize]="totalLengthOfCollection"></ngb-pagination>
+            <select class="form-select" style="width: auto" [(ngModel)]="cpageSize">
+            <option [ngValue]="2">2 items per page</option>
+            <option [ngValue]="4">4 items per page</option>
+            <option [ngValue]="6">6 items per page</option>
+          </select>
+        </div>
+    </div>
+</div>
+
+<ng-template #editModal let-modal>
+
+    <div class="modal-header bg-secondary text-white">
+        <h5 class="modal-title" id="editLabel">{{editAddLabel}} habitation</h5>
+        <button type="button" class="btn-close bg-danger" (click)="closeBtnClick()" aria-label="Close">
+        </button>
+    </div>
+    <div class="modal-body" *ngIf="isHide">
+        <app-parcelle-appartement-form [childProperty]="parentProperty"></app-parcelle-appartement-form>
+    </div>
+    <div class="modal-body" *ngIf="!isHide">
+        <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+            <li [ngbNavItem]="1">
+              <a ngbNavLink>Habitation</a>
+              <ng-template ngbNavContent>
+                <app-parcelle-appartement-form [childProperty]="parentProperty"></app-parcelle-appartement-form>
+              </ng-template>
+            </li>
+            <li [ngbNavItem]="2">
+              <a ngbNavLink>Detail Habitation</a>
+              <ng-template ngbNavContent>
+                <app-details-parcelle-appartement-list [childProperty]="parentProperty"></app-details-parcelle-appartement-list>
+              </ng-template>
+            </li>
+            <li [ngbNavItem]="3">
+                <a ngbNavLink>Images</a>
+                <ng-template ngbNavContent>
+                   <app-habitation-image [childProperty]="parentProperty"></app-habitation-image> 
+                </ng-template>
+              </li>
+          </ul>
+        
+          <div [ngbNavOutlet]="nav" class="mt-2"></div>
+       
+    </div>
+</ng-template>

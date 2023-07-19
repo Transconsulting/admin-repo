@@ -1,0 +1,211 @@
+<div class="card">
+    <div class="card-header d-flex">Liste Domaines
+        <button type="button" [hidden]="isBtnAdd"  class="btn btn-danger ms-auto" (click)="onDisplay()"><i class="fas fa-plus"></i></button>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped border mt-4">
+            <thead>
+                <tr>
+                    <th >ID</th>
+                    <th sortable="Name" >Libelle</th>
+                    <th sortable="Name" >Commune</th>
+                    <th sortable="Name" >Quartier</th>
+                    <th sortable="Name" >Statut</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let domaine of cfilterDomaine  | slice: (cpage-1) * cpageSize : (cpage-1) * cpageSize + cpageSize  let i=index">
+                    <td>{{ i+1 }}</td>
+                    <!-- <td>
+                        <img [src]='domaine.imagePath'class="me-2 rounded-circle" style="width: 30px">
+                        <ngb-highlight [result]="domaine.Name" [term]="csearchTerm"></ngb-highlight>
+                    </td> -->
+                    <td>
+                        <ngb-highlight [result]="domaine.libelle" [term]="csearchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                        <ngb-highlight [result]="domaine.commune" [term]="csearchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                        <ngb-highlight [result]="domaine.quartier" [term]="csearchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                        <ngb-highlight [result]="domaine.statutDomaine" [term]="csearchTerm"></ngb-highlight>
+                    </td>
+                   
+                    <td>
+                        <button type="button" class="btn btn-secondary btn-sm" (click)="initialisation(domaine)"><i class="fas fa-eye"></i></button>
+                        <i-feather name="trash-2" class="feather-sm text-danger pointer" (click)="delete(domaine.uuid)"></i-feather> 
+                    </td>
+    
+    
+                </tr>
+            </tbody>
+        </table>
+    
+        <div class="d-flex justify-content-between p-2">    
+            <ngb-pagination [(page)]="cpage"
+            [pageSize]="cpageSize"
+            [collectionSize]="totalLengthOfCollection"></ngb-pagination>
+            <select class="form-select" style="width: auto" [(ngModel)]="cpageSize">
+            <option [ngValue]="2">2 items per page</option>
+            <option [ngValue]="4">4 items per page</option>
+            <option [ngValue]="6">6 items per page</option>
+          </select>
+        </div>
+        
+    </div>
+</div>
+
+ <div class="card" [hidden]="!isDisplay">
+    <div class="card-header">Enregistrement</div>
+    <div class="card-body">
+        <form [formGroup]="domaineForm" (ngSubmit)="onSubmit()">
+
+            <div class="mb-3 row">
+                <label for="nom" class="col-sm-2 col-form-label">Domaine:</label>
+                <div class="col-sm-4">
+                <select name="" id="" class="form-control border border-secondary" formControlName="type"  (blur)=logValidationErrors(domaineForm)  [ngClass]="{
+                    'is-invalid': submitted && domaineForm.controls.type.errors
+                  }">
+                   <!-- <option value="" selected disabled>Choisir</option> -->
+                   <option  *ngFor="let type of dataType" value="{{type}}">{{type}}</option>
+                </select>
+                <span class="help-block" *ngIf="domaineForm.controls.type">
+                    {{formsErrors.type}}
+                </span>
+            </div>
+
+            <label for="nom" class="col-sm-2 col-form-label">Agent :</label>
+                <div class="col-sm-4">
+                    <select name="" id="" class="form-control border border-secondary" formControlName="uuidAgent"  (blur)=logValidationErrors(domaineForm)  [ngClass]="{
+                        'is-invalid': submitted && domaineForm.controls.uuidAgent.errors
+                      }">
+                        <option disabled selected>Choisir</option>
+                        <option  *ngFor="let agent of dataAgent" value="{{agent.uuid}}">{{agent.prenoms}}-{{agent.nom}}</option>
+                    </select>
+                    <span class="help-block" *ngIf="domaineForm.controls.uuidAgent">
+                        {{formsErrors.uuidAgent}}
+                    </span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="nom" class="col-sm-2 col-form-label">Libelle :</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control border border-secondary col-12" formControlName="libelle" id="libelle"
+                    (blur)=logValidationErrors(domaineForm) placeholder="Description ..."  [ngClass]="{
+                        'is-invalid': submitted && domaineForm.controls.libelle.errors
+                      }">
+                <span class="help-block" *ngIf="domaineForm.controls.libelle">
+                    {{formsErrors.libelle}}
+                </span>
+            </div>
+           </div>
+             <div class="mb-3 row">
+                <label for="nom" class="col-sm-2 col-form-label">Adresse :</label>
+                <div class="col-sm-3">
+                    <select name="" id="" class="form-control border border-secondary" formControlName="ville" (change)="getCommunes(domaineForm.controls.ville.value)" 
+                     (blur)=logValidationErrors(domaineForm)  [ngClass]="{
+                        'is-invalid': submitted && domaineForm.controls.ville.errors
+                      }">
+                        <option disabled selected>Choisir</option>
+                        <option  *ngFor="let ville of dataVille" value="{{ville.libelle}}">{{ville.libelle}}</option>
+                    </select>
+                    <span class="help-block" *ngIf="domaineForm.controls.ville">
+                        {{formsErrors.ville}}
+                    </span>
+                </div>
+                <div class="col-sm-4">
+                    <select name="" id="" class="form-control border border-secondary" formControlName="commune" (change)="getQuartier(domaineForm.controls.commune.value)"  (blur)=logValidationErrors(domaineForm)  [ngClass]="{
+                        'is-invalid': submitted && domaineForm.controls.commune.errors
+                      }">
+                        <option disabled selected>Choisir</option>
+                        <option  *ngFor="let commune of dataCommunes" value="{{commune.libelle}}">{{commune.libelle}}</option>
+                    </select>
+                    <span class="help-block" *ngIf="domaineForm.controls.commune">
+                        {{formsErrors.commune}}
+                    </span>
+                </div>
+                <div class="col-sm-3">
+                    <select name="" id="" class="form-control border border-secondary" formControlName="uuidQuartier"  (blur)=logValidationErrors(domaineForm)  [ngClass]="{
+                        'is-invalid': submitted && domaineForm.controls.uuidQuartier.errors
+                      }">
+                        <option disabled selected>Choisir</option>
+                        <option  *ngFor="let quartier of dataQuartier" value="{{quartier.uuid}}">{{quartier.libelle}}</option>
+                    </select>
+                    <span class="help-block" *ngIf="domaineForm.controls.uuidQuartier">
+                        {{formsErrors.uuidQuartier}}
+                    </span>
+                </div>
+            </div> 
+
+            
+            <div class="mb-3 row">
+            <label for="nom" class="col-sm-2 col-form-label">Type Anonce :</label>
+            <div class="col-sm-4">
+                <select name="" id="" class="form-control border border-secondary" formControlName="typeAnonce"  (blur)=logValidationErrors(domaineForm) [ngClass]="{
+                    'is-invalid': submitted && domaineForm.controls.typeAnonce.errors
+                  }">
+                   <!-- <option value="" selected disabled>Choisir</option> -->
+                   <option  *ngFor="let typeAnonce of dataTypeAnonce" value="{{typeAnonce}}">{{typeAnonce}}</option>
+                </select>
+                <span class="help-block" *ngIf="domaineForm.controls.typeAnonce">
+                    {{formsErrors.typeAnonce}}
+                </span>
+            </div>
+            <label for="nom" class="col-sm-2 col-form-label">Statut :</label>
+            <div class="col-sm-4">
+                <select name="" id="" class="form-control border border-secondary" formControlName="statutDomaine"  (blur)=logValidationErrors(domaineForm)  [ngClass]="{
+                    'is-invalid': submitted && domaineForm.controls.statutDomaine.errors
+                  }">
+                   <!-- <option value="" selected disabled>Choisir</option> -->
+                   <option  *ngFor="let statutDomaine of dataStatut" value="{{statutDomaine}}">{{statutDomaine}}</option>
+                </select>
+                <span class="help-block" *ngIf="domaineForm.controls.statutDomaine">
+                    {{formsErrors.statutDomaine}}
+                </span>
+            </div>
+        </div>        
+            <div class="mb-3 row">
+                
+                    <label for="nom" class="col-sm-2 col-form-label">Position :</label>
+               
+                <div class="col-sm-5">
+                    <input type="text" class="form-control border border-secondary col-12" formControlName="longitude" id="longitude"
+                       >
+                    <span class="help-block" *ngIf="domaineForm.controls.longitude">
+                        {{formsErrors.longitude}}
+                    </span>
+                </div>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control border border-secondary" formControlName="lattitude" id="lattitude" placeholder="laltitude"
+                    >
+                    <span class="help-block" *ngIf="domaineForm.controls.lattitude">
+                        {{formsErrors.lattitude}}
+                    </span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-10 button-group">
+                    <div class="pull-right btn-group col-12 mb-2">
+                        <button [disabled]="isButtonActive" type="button" class="btn btn-outline-danger col-12" (click)="onActive()" title="Modifier" >
+                            <i class="mdi mdi-pencil-box yellow" aria-hidden="true"></i> Activer
+                        </button>
+                        <button class="btn btn-outline-success col-12"  type="submit" [title]="
+                                domaineForm.valid
+                                ? 'Enregistrez vos données'
+                                : 'Verrouillé jusqu\'à correction des erreurs'
+                            " >
+                            <i class="fa fa-save green" aria-hidden="true"></i> Sauvegarder
+                        </button>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        
+        </form>
+    </div>
+</div> 

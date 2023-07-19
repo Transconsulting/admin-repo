@@ -1,0 +1,42 @@
+<div class="card">
+    <div class="card-header bg-secondary text-dark">
+        Gestion des References
+    </div>
+    <div class="card-body">
+        <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+            <li [ngbNavItem]="1">
+              <a ngbNavLink>Ville</a>
+              <ng-template ngbNavContent>
+                <app-ville-list></app-ville-list>
+              </ng-template>
+            </li>
+            <li [ngbNavItem]="2">
+              <a ngbNavLink>Commune</a>
+              <ng-template ngbNavContent>
+                <app-commune-list></app-commune-list>
+              </ng-template>
+            </li>
+            <li [ngbNavItem]="3">
+              <a ngbNavLink>Quartier</a>
+              <ng-template ngbNavContent>
+                <app-quartier-list></app-quartier-list>
+               
+              </ng-template>
+            </li>
+            <li [ngbNavItem]="4">
+                <a ngbNavLink>Mode Paiement</a>
+                <ng-template ngbNavContent>
+                 <app-mode-paiement-list></app-mode-paiement-list>
+                </ng-template>
+              </li>
+              <li [ngbNavItem]="5">
+                <a ngbNavLink>Profession</a>
+                <ng-template ngbNavContent>
+                 <app-proffession-list></app-proffession-list>
+                </ng-template>
+              </li>
+          </ul>
+      
+          <div [ngbNavOutlet]="nav" class="mt-2"></div>
+    </div>
+</div>

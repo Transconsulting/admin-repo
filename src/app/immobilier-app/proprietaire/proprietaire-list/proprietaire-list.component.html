@@ -1,0 +1,112 @@
+<div class="card">
+    <div class="card-header bg-secondary text-dark">Gestion Propritaires</div>
+    <div class="card-body">
+        <div class="d-flex mt-3">
+            <input type="text" placeholder="Search" class="form-control w-auto border border-secondary" [(ngModel)]="csearchTerm" />
+            <button type="button"  class="btn btn-secondary ms-auto" (click)="openModal(editModal, null)">+ Ajouter</button>
+        </div>
+        <table class="table table-striped border mt-4">
+            <thead class="text-center">
+                <tr>
+                    <th >ID</th>
+                    <th sortable="Name" >Nom</th>
+                    <th sortable="Name" >Prenoms</th>
+                    <th sortable="Name" >Telephone</th>
+                    <th sortable="Name" >Ville</th>
+                    <th sortable="Name" >Domaines</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                <tr *ngFor="let proprietaire of cfilterProprietaire | slice: (cpage-1) * cpageSize : (cpage-1) * cpageSize + cpageSize  let i=index">
+                    <td>{{ i+1 }}</td>
+                    <!-- <td>
+                        <img [src]='proprietaire.imagePath'class="me-2 rounded-circle" style="width: 30px">
+                        <ngb-highlight [result]="proprietaire.Name" [term]="csearchTerm"></ngb-highlight>
+                    </td> -->
+                    <td>
+                        <ngb-highlight [result]="proprietaire.nom" [term]="csearchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                        <ngb-highlight [result]="proprietaire.prenoms" [term]="csearchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                        <ngb-highlight [result]="proprietaire.tel" [term]="csearchTerm"></ngb-highlight>
+                    </td>
+                   
+                    <td>
+                        <ngb-highlight [result]="proprietaire.ville" [term]="csearchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                        <button class="btn btn-info btn-sm text-center" (click)="openModalDomaine(domaineView, proprietaire)"><i class="fas fa-eye"></i></button> 
+                    </td>
+                    <td>
+                       <i-feather name="edit-3" class="feather-sm text-info me-2 pointer"  (click)="openModal(editModal, proprietaire)"></i-feather>
+                        <i-feather name="trash-2" class="feather-sm text-danger pointer" (click)="delete(proprietaire.uuid)"></i-feather> 
+                    </td>
+    
+    
+                </tr>
+            </tbody>
+        </table>
+    
+        <div class="d-flex justify-content-between p-2">    
+            <ngb-pagination [(page)]="cpage"
+            [pageSize]="cpageSize"
+            [collectionSize]="totalLengthOfCollection"></ngb-pagination>
+            <select class="form-select" style="width: auto" [(ngModel)]="cpageSize">
+            <option [ngValue]="2">2 items per page</option>
+            <option [ngValue]="4">4 items per page</option>
+            <option [ngValue]="6">6 items per page</option>
+          </select>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #editModal let-modal >
+
+    <div class="modal-header bg-secondary text-white">
+        <h5 class="modal-title" id="editLabel">{{editAddLabel}} proprietaire</h5>
+        <button type="button" class="btn-close bg-danger" (click)="closeBtnClick()" aria-label="Close">
+        </button>
+    </div>
+    <div class="modal-body"  *ngIf="isHide">
+        <app-proprietaire-form [childProperty]="parentProperty"></app-proprietaire-form>
+    </div>
+    <div class="modal-body" *ngIf="!isHide">
+      
+        <ul   ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs" >
+            <li [ngbNavItem]="1">
+              <a ngbNavLink>Propietaire</a>
+              <ng-template ngbNavContent>
+                <app-proprietaire-form [childProperty]="parentProperty"></app-proprietaire-form>
+              </ng-template>
+            </li>
+            <li [ngbNavItem]="2">
+              <a ngbNavLink >Domaine</a>
+              <ng-template ngbNavContent>
+                <app-domaine-list [childProperty]="parentProperty"></app-domaine-list>
+              </ng-template>
+            </li>
+          </ul>
+        
+          <div [ngbNavOutlet]="nav" class="mt-2"></div>
+       
+    </div>
+
+   
+</ng-template>
+
+
+<ng-template #domaineView let-modal >
+
+    <div class="modal-header bg-secondary text-white">
+        <h5 class="modal-title" id="editLabel">Domaines</h5>
+        <button type="button" class="btn-close bg-danger" (click)="closeBtnClick()" aria-label="Close">
+        </button>
+    </div>
+    <div class="modal-body">
+        <app-domaine-details [childProperty]="parentProperty"></app-domaine-details>    
+    </div>
+</ng-template>
